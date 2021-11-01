@@ -4,11 +4,10 @@ import pandas as pd
 import geopandas as gpd
 from urllib.request import urlopen
 from zipfile import ZipFile
-class GeoTiff
 import rioxarray
 import rasterio
 import rasterio.mask
-from Typing import List
+from typing import List
 
 class GeoTiff:
     # look for the right tif file
@@ -48,12 +47,12 @@ class GeoTiff:
             with urlopen(zip_url) as zipresp:
                 with ZipFile(BytesIO(zipresp.read())) as zfile:
                     print(f"getting file: {zip_url}")
-                    zfile.extractall(f'./data/temp/{zip_url[-:3]}')
+                    zfile.extractall(f'./data/temp/{zip_url[:3]}')
                     print(f"extraction done: {zip_url}")
             zip_url = url_dtm
         print("the tif files are extracted")
 
-    def mask_tif_maps(number: str, polygon: List[str, str]) -> List[str, str]:
+    def mask_tif_maps(number: str, polygon: List[str]) -> List[str]:
         # since the tif files are way to big and not right for the project
         # we crop a peace that only holds our address" polygon
         dsm_tif = f"./data/temp/dsm/GeoTiff/DHMVIIDSMRAS1m_{num_tif_map}"
@@ -73,7 +72,7 @@ class GeoTiff:
                              "transform": out_transform,
                              "crs": epsg_code,
                              })
-            with rt.open(f"./data/mask_file/{name}_mask.tif", "w", **out_meta) as dest_file
+            with rt.open(f"./data/mask_file/{name}_mask.tif", "w", **out_meta) as dest_file:
                 dest_file.write(out_img)
                 print(name, "mask file is created")
                 mask_files.append(f"./data/mask_file/{name}_mask.tif")

@@ -1,9 +1,9 @@
 import requests
-from Typing import List
+from typing import Dict, List
 
 class API:
 
-    def get_address_data_from_geopunt(address: str):
+    def get_address_data_from_geopunt(address: str) -> Dict[str, str]:
         data = requests.get(f"https://loc.geopunt.be/v4/Location?q={address}").json()
     #    print(data,"\n")
         info = {'address' : address,
@@ -18,11 +18,9 @@ class API:
                               params={"postcode": info['postcode'],
                                       "straatnaam": info['street'],
                                       "huisnummer": info['house_number']}).json()
+        print(detail)
         building = requests.get(detail['adresMatches'][0]['adresseerbareObjecten'][0]['detail']).json()
         build = requests.get(building['gebouw']['detail']).json()
         info['polygon'] = [build['geometriePolygoon']['polygon']]
-    #    print(info['polygon'][0]['coordinates'][0])
-    #    print(info['polygon'][1]['coordinates'][1])
-
 
         return info
